@@ -1,4 +1,4 @@
-Plugin for YOURLS up to 1.7.2: **Mass Remove Links**
+Plugin for YOURLS: **Mass Remove Links**
 
 # What for
 
