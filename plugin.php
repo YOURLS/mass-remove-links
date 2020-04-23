@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Mass Remove Links
-Plugin URI: http://yourls.org/
+Plugin URI: https://github.com/YOURLS/mass-remove-links/
 Description: Remove several (or all) links.
 Version: 1.1
 Author: Ozh
