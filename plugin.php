@@ -3,7 +3,7 @@
 Plugin Name: Mass Remove Links
 Plugin URI: https://github.com/YOURLS/mass-remove-links/
 Description: Remove several (or all) links.
-Version: 1.1
+Version: 1.2
 Author: Ozh
 Author URI: http://ozh.org/
 */
@@ -59,6 +59,12 @@ function ozh_yourls_linkmr_form() {
         <input type="text" name="url" /> (case sensitive)
         </p>
 
+        <p><label for="radio_clicks">
+        <input type="radio" name="what" id="radio_clicks" value="clicks"/>All links with the specified amount of clicks (exact number)
+        </label>
+        <input type="number" name="clicks" value="0" />
+        </p>
+
         <p><label for="radio_all">
         <input type="radio" name="what" id="radio_all" value="all"/>All links. All.
         </label>
@@ -73,7 +79,7 @@ function ozh_yourls_linkmr_form() {
         function select_radio(el){
                 $(el).parent().find(':radio').click();
         }
-        $('input:text')
+        $('input:text, input[type="number"]')
             .click(function(){select_radio($(this))})
             .focus(function(){select_radio($(this))})
             .change(function(){select_radio($(this))});
@@ -91,6 +97,11 @@ function ozh_yourls_linkmr_process() {
     switch( $_POST['what'] ) {
         case 'all':
             $where = '1=1';
+            break;
+
+        case 'clicks':
+            $where = "`clicks` = :clicks";
+            $binds['clicks'] = (int) $_POST['clicks'];
             break;
 
         case 'date':
