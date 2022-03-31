@@ -60,9 +60,14 @@ function ozh_yourls_linkmr_form() {
         </p>
 
         <p><label for="radio_clicks">
-        <input type="radio" name="what" id="radio_clicks" value="clicks"/>All links with the specified amount of clicks (exact number)
+        <input type="radio" name="what" id="radio_clicks" value="clicks"/>All links with the specified amount of clicks
         </label>
-        <input type="number" name="clicks" value="0" />
+        <select name="clicks_filter">
+            <option value="equals">Equals (=)</option>
+            <option value="greaterThan">Greater than (>)</option>
+            <option value="lessThan">Less than (<)</option>
+        </select>
+        <input type="number" name="clicks" min="0" value="0" />
         </p>
 
         <p><label for="radio_all">
@@ -94,14 +99,22 @@ function ozh_yourls_linkmr_process() {
     $where = '';
     $binds = array();
 
+    $validClicksFilters = array(
+        'equals' => '=',
+        'greaterThan' => '>',
+        'lessThan' => '<',
+    );
+
     switch( $_POST['what'] ) {
         case 'all':
             $where = '1=1';
             break;
 
         case 'clicks':
-            $where = "`clicks` = :clicks";
+            $clicksFilter = $validClicksFilters[$_POST['clicks_filter']] ?? '=';
+
             $binds['clicks'] = (int) $_POST['clicks'];
+            $where = "`clicks` $clicksFilter :clicks";
             break;
 
         case 'date':
