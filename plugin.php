@@ -105,7 +105,7 @@ function ozh_yourls_linkmr_process() {
         'lessThan' => '<',
     );
 
-    switch( $_POST['what'] ) {
+    switch( $_POST['what'] ?? '' ) {
         case 'all':
             $where = '1=1';
             break;
@@ -161,15 +161,18 @@ function ozh_yourls_linkmr_process() {
             echo '<p>'.count( $query ).' found:</p>';
             echo '<ul>';
             foreach( $query as $link ) {
-                $short = $link->keyword;
-                $url   = $link->url;
-                echo "<li>$short: <a href='$url'>$url</a></li>\n";
+                $short = yourls_esc_html( $link->keyword );
+                $url   = yourls_esc_html( $link->url );
+                $href  = yourls_esc_url( $link->url );
+                echo "<li>$short: <a href='$href'>$url</a></li>\n";
             }
             echo '</ul>';
             unset( $_POST['test'] );
             echo '<form method="post">';
             foreach( $_POST as $k=>$v ) {
-                if( $v ) {
+                if( $v && is_scalar( $v ) ) {
+                    $k = yourls_esc_attr( $k );
+                    $v = yourls_esc_attr( $v );
                     echo "<input type='hidden' name='$k' value='$v' />";
                 }
             }
